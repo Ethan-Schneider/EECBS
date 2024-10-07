@@ -229,7 +229,7 @@ int main(int argc, char** argv)
 }
 
 
-int pymain(string& map, int k, int t, double suboptimality, std::vector<std::tuple<int, int>> agent_start_locations = {}, std::vector<std::tuple<int, int>> agent_goal_locations = {})
+vector<vector<tuple<int,int>>> pymain(string& map, int k, int t, double suboptimality, std::vector<std::tuple<int, int>> agent_start_locations = {}, std::vector<std::tuple<int, int>> agent_goal_locations = {})
 {
 	// TODO: Change this function to call ECBS like the function above, but not having to read in file names
 	// Return: str of paths, additionally any statistics we need
@@ -314,8 +314,18 @@ int pymain(string& map, int k, int t, double suboptimality, std::vector<std::tup
 	cbs.saveCT(output_name); // for debug*/
 	// if (0)
 	// 	ecbs.saveStats(vm["output"].as<string>(), vm["agents"].as<string>());
+
+
+	vector<vector<tuple<int,int>>> paths;
+	if (ecbs.solution_found)
+	{
+		paths = ecbs.returnPaths();
+	}
+	else
+	{
+		paths = {};
+	}
 	ecbs.clearSearchEngines();
 
-	
-	return 0;
+	return paths;
 }
