@@ -1,5 +1,5 @@
 #include "ECBS.h"
-
+#include "Instance.h"
 
 bool ECBS::solve(double time_limit, int _cost_lowerbound)
 {
@@ -590,12 +590,13 @@ ECBSNode* ECBS::selectNode()
 
 void ECBS::printPaths() const
 {
+
 	for (int i = 0; i < num_of_agents; i++)
 	{
 		cout << "Agent " << i << " (" << paths_found_initially[i].first.size() - 1 << " -->" <<
 			paths[i]->size() - 1 << "): ";
 		for (const auto & t : *paths[i])
-			cout << t.location << "->";
+			cout << "(" << search_engines[0]->instance.getRowCoordinate(t.location) << ", " << search_engines[0]->instance.getColCoordinate(t.location) << ")->";
 		cout << endl;
 	}
 }

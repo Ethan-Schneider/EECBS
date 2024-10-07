@@ -15,6 +15,7 @@ public:
 	// Runs the algorithm until the problem is solved or time is exhausted 
 	bool solve(double time_limit, int cost_lowerbound = 0);
     void clear(); // used for rapid random  restart
+	void printPaths() const;
 
 private:
 	vector<int> min_f_vals; // lower bounds of the cost of the shortest path
@@ -40,5 +41,4 @@ private:
 
 	//update information
 	void updatePaths(ECBSNode* curr);
-	void printPaths() const;
 };

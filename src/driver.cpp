@@ -9,6 +9,9 @@
 */
 #include <boost/program_options.hpp>
 #include <boost/tokenizer.hpp>
+#include <pybind11/pybind11.h>
+#include <pybind11/numpy.h>
+#include <pybind11/stl.h>
 #include "ECBS.h"
 
 
@@ -223,4 +226,96 @@ int main(int argc, char** argv)
 
 	return 0;
 
+}
+
+
+int pymain(string& map, int k, int t, double suboptimality, std::vector<std::tuple<int, int>> agent_start_locations = {}, std::vector<std::tuple<int, int>> agent_goal_locations = {})
+{
+	// TODO: Change this function to call ECBS like the function above, but not having to read in file names
+	// Return: str of paths, additionally any statistics we need
+
+	// Args: unsure if it will have to be everything, or if I can initialize the vm and have those values automatically filled in 
+	// 	po::variables_map vm;
+	//  po::store(po::parse_command_line(argc, argv, desc), vm);
+	//  If this is the case, just pass in args as if running through command line
+
+	namespace py = pybind11;
+
+	high_level_solver_type s = high_level_solver_type::EES;
+	heuristics_type h = heuristics_type::WDG;
+	heuristics_type h_hat = heuristics_type::GLOBAL;
+	conflict_selection conflict = conflict_selection::EARLIEST;
+	node_selection n = node_selection::NODE_CONFLICTPAIRS;
+
+	srand((int)time(0));
+
+	cout << "map: " << map << endl;
+	
+	string agent_dummy_file = "dummy";
+	string agent_actual_file = "random-32-32-20-random-1.scen";
+
+	///////////////////////////////////////////////////////////////////////////
+	// Print agent_start locations
+	for (std::tuple<int, int> i: agent_start_locations)
+	{
+		cout << "(" << get<0>(i) << ", " << get<1>(i) << ")" << endl;
+	}
+
+	// Print agent_goal locations
+	for (std::tuple<int, int> i: agent_goal_locations)
+	{
+		cout << "(" << get<0>(i) << ", " << get<1>(i) << ")" << endl;
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+	// load the instance
+	Instance instance(map, agent_actual_file, k, agent_start_locations, agent_goal_locations);
+
+	srand(0);
+	int runs = 1;
+
+	ECBS ecbs(instance, 0, 1);
+	ecbs.setPrioritizeConflicts(1);
+	ecbs.setDisjointSplitting(0);
+	ecbs.setBypass(1);
+	ecbs.setRectangleReasoning(1);
+	ecbs.setCorridorReasoning(1);
+	ecbs.setHeuristicType(h, h_hat);
+	ecbs.setTargetReasoning(1);
+	ecbs.setMutexReasoning(false);
+	ecbs.setConflictSelectionRule(conflict);
+	ecbs.setNodeSelectionRule(n);
+	ecbs.setSavingStats(0);
+	ecbs.setHighLevelSolver(s, suboptimality);
+
+
+	//////////////////////////////////////////////////////////////////////
+	// run
+	double runtime = 0;
+	int lowerbound = 0;
+	for (int i = 0; i < runs; i++)
+	{
+		ecbs.clear();
+		ecbs.solve(t / runs, lowerbound);
+		runtime += ecbs.runtime;
+		if (ecbs.solution_found)
+			break;
+		lowerbound = ecbs.getLowerBound();
+		ecbs.randomRoot = true;
+		cout << "Failed to find solutions in Run " << i << endl;
+	}
+	ecbs.runtime = runtime;
+	if (ecbs.solution_found)
+	{
+		ecbs.printPaths();
+	}
+	/*size_t pos = vm["output"].as<string>().rfind('.');      // position of the file extension
+	string output_name = vm["output"].as<string>().substr(0, pos);     // get the name without extension
+	cbs.saveCT(output_name); // for debug*/
+	// if (0)
+	// 	ecbs.saveStats(vm["output"].as<string>(), vm["agents"].as<string>());
+	ecbs.clearSearchEngines();
+
+	
+	return 0;
 }
