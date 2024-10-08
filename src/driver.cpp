@@ -305,7 +305,7 @@ vector<vector<tuple<int,int>>> pymain(string& map, int k, int t, double suboptim
 		cout << "Failed to find solutions in Run " << i << endl;
 	}
 	ecbs.runtime = runtime;
-	if (ecbs.solution_found)
+	if (ecbs.solution_found & false)
 	{
 		ecbs.printPaths();
 	}

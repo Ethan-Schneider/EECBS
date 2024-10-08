@@ -613,7 +613,6 @@ vector<vector<tuple<int,int>>> ECBS::returnPaths() const
 		agent_path.reserve(1000);
 		for (const auto & t : *paths[i])
 		{
-			cout << search_engines[0]->instance.getRowCoordinate(t.location) << endl;
 			agent_path.push_back(std::make_tuple(search_engines[0]->instance.getRowCoordinate(t.location), search_engines[0]->instance.getColCoordinate(t.location)));
 		}
 		agent_paths.push_back(agent_path);
@@ -621,17 +620,6 @@ vector<vector<tuple<int,int>>> ECBS::returnPaths() const
 
 	return agent_paths;
 }
-
-// vector<vector<int>> ECBS::returnPaths() const
-// {
-// 	std::vector<int> a = {1, 2, 3};
-// 	std::vector<int> b = {4, 6, 3};
-// 	std::vector<int> c = {9, 8, 3};
-
-// 	std::vector<vector<int>> ints = {a, b, c};
-
-// 	return ints;
-// }
 
 
 void ECBS::classifyConflicts(ECBSNode &node)
