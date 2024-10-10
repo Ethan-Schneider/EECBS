@@ -248,24 +248,22 @@ vector<vector<tuple<int,int>>> pymain(string& map, int k, int t, double suboptim
 	node_selection n = node_selection::NODE_CONFLICTPAIRS;
 
 	srand((int)time(0));
-
-	cout << "map: " << map << endl;
 	
 	string agent_dummy_file = "dummy";
 	string agent_actual_file = "random-32-32-20-random-1.scen";
 
 	///////////////////////////////////////////////////////////////////////////
 	// Print agent_start locations
-	for (std::tuple<int, int> i: agent_start_locations)
-	{
-		cout << "(" << get<0>(i) << ", " << get<1>(i) << ")" << endl;
-	}
+	// for (std::tuple<int, int> i: agent_start_locations)
+	// {
+	// 	cout << "(" << get<0>(i) << ", " << get<1>(i) << ")" << endl;
+	// }
 
-	// Print agent_goal locations
-	for (std::tuple<int, int> i: agent_goal_locations)
-	{
-		cout << "(" << get<0>(i) << ", " << get<1>(i) << ")" << endl;
-	}
+	// // Print agent_goal locations
+	// for (std::tuple<int, int> i: agent_goal_locations)
+	// {
+	// 	cout << "(" << get<0>(i) << ", " << get<1>(i) << ")" << endl;
+	// }
 
 	///////////////////////////////////////////////////////////////////////////
 	// load the instance
@@ -274,7 +272,7 @@ vector<vector<tuple<int,int>>> pymain(string& map, int k, int t, double suboptim
 	srand(0);
 	int runs = 1;
 
-	ECBS ecbs(instance, 0, 1);
+	ECBS ecbs(instance, 0, 0);
 	ecbs.setPrioritizeConflicts(1);
 	ecbs.setDisjointSplitting(0);
 	ecbs.setBypass(1);
@@ -287,7 +285,6 @@ vector<vector<tuple<int,int>>> pymain(string& map, int k, int t, double suboptim
 	ecbs.setNodeSelectionRule(n);
 	ecbs.setSavingStats(0);
 	ecbs.setHighLevelSolver(s, suboptimality);
-
 
 	//////////////////////////////////////////////////////////////////////
 	// run
@@ -305,16 +302,12 @@ vector<vector<tuple<int,int>>> pymain(string& map, int k, int t, double suboptim
 		cout << "Failed to find solutions in Run " << i << endl;
 	}
 	ecbs.runtime = runtime;
-	if (ecbs.solution_found & false)
-	{
-		ecbs.printPaths();
-	}
-	/*size_t pos = vm["output"].as<string>().rfind('.');      // position of the file extension
-	string output_name = vm["output"].as<string>().substr(0, pos);     // get the name without extension
-	cbs.saveCT(output_name); // for debug*/
-	// if (0)
-	// 	ecbs.saveStats(vm["output"].as<string>(), vm["agents"].as<string>());
-
+	// if (ecbs.solution_found)
+	// {
+	// 	cout << "====================================Cpp Paths==========================================" << endl;
+	// 	ecbs.printPaths();
+	// 	cout << "=======================================================================================" << endl;
+	// }
 
 	vector<vector<tuple<int,int>>> paths;
 	if (ecbs.solution_found)

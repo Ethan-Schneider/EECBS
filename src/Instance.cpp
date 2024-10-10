@@ -289,6 +289,8 @@ bool Instance::loadMap()
 	}
 	map_size = num_of_cols * num_of_rows;
 	my_map.resize(map_size, false);
+	//Read empty line before loading map data
+	getline(myfile, line);
 	// read map (and start/goal locations)
 	for (int i = 0; i < num_of_rows; i++) {
 		getline(myfile, line);
