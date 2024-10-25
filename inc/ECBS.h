@@ -16,7 +16,6 @@ public:
 	bool solve(double time_limit, int cost_lowerbound = 0);
     void clear(); // used for rapid random  restart
 	void printPaths() const;
-	// vector<vector<int>> returnPaths() const;
 	vector<vector<tuple<int,int>>> returnPaths() const;
 
 private:
