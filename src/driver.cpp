@@ -299,39 +299,16 @@ vector<vector<tuple<int,int>>> pymain(string& map, int k, int t, double suboptim
 			break;
 		lowerbound = ecbs.getLowerBound();
 		ecbs.randomRoot = true;
-		cout << "Failed to find solutions in Run " << i << endl;
 	}
 	ecbs.runtime = runtime;
-	// if (ecbs.solution_found)
-	// {
-	// 	cout << "====================================Cpp Paths==========================================" << endl;
-	// 	ecbs.printPaths();
-	// 	cout << "=======================================================================================" << endl;
-	// }
+
 
 	vector<vector<tuple<int,int>>> paths;
 	if (ecbs.solution_found)
 	{
 		paths = ecbs.returnPaths();
 	}
-	else
-	{
-		paths = {};
-		cout << "Unable to find solution for goals: " << endl;
-		// Print agent_start locations
-		cout << "Agent Start Locations" << endl;
-		for (std::tuple<int, int> i: agent_start_locations)
-		{
-			cout << "(" << get<0>(i) << ", " << get<1>(i) << ")" << endl;
-		}
 
-		cout << "Agent Goal Locations" << endl;
-		// Print agent_goal locations
-		for (std::tuple<int, int> i: agent_goal_locations)
-		{
-			cout << "(" << get<0>(i) << ", " << get<1>(i) << ")" << endl;
-		}
-	}
 	ecbs.clearSearchEngines();
 
 	return paths;
