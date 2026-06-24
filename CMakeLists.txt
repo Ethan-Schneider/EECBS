@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.5)
 
 project(eecbs)
 set(CMAKE_CXX_STANDARD 20)
@@ -54,7 +54,7 @@ ADD_LIBRARY(LibsModule
 )
 
 pybind11_add_module(${PROJECT_NAME} src/pywrap.cpp)
-target_link_libraries(${PROJECT_NAME} LibsModule)
+target_link_libraries(${PROJECT_NAME} PRIVATE LibsModule)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE VERSION_INFO=${EXAMPLE_VERSION_INFO})
 target_include_directories(${PROJECT_NAME} PRIVATE ${PYBIND11_INCLUDE_DIRS})
@@ -63,4 +63,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Eigen3::Eigen)
 # Find Boost
 find_package(Boost REQUIRED COMPONENTS program_options system filesystem)
 include_directories( ${Boost_INCLUDE_DIRS} )
-target_link_libraries(eecbs ${Boost_LIBRARIES})
+target_link_libraries(eecbs PRIVATE ${Boost_LIBRARIES})
